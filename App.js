@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, ActivityIndicator, AsyncStorage, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, ActivityIndicator, AsyncStorage, TouchableOpacity, StatusBar } from 'react-native';
 
 import { FlatGrid } from 'react-native-super-grid';
 import { Container, Icon, Badge } from 'native-base';
@@ -117,9 +117,9 @@ export default class Example extends Component {
   }
 
   titleStyleCondition(country) {
-    return country === 'Bosnia and Herzegovina' || 
-    country === 'Antigua and Barbuda' || 
-    country === 'St. Vincent Grenadines' ? styles.itemTitle2 : styles.itemTitle
+    return country === 'Bosnia and Herzegovina' ||
+      country === 'Antigua and Barbuda' ||
+      country === 'St. Vincent Grenadines' ? styles.itemTitle2 : styles.itemTitle
   }
 
   render() {
@@ -128,9 +128,9 @@ export default class Example extends Component {
     const compare = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
 
     return (
-      <Container style={{ flex: 1, flexDirection: 'column', backgroundColor: '#2e2e2e' }}>
-
-        <Text style={{ color: 'red', fontSize: 20, fontWeight: 'bold', textAlign: 'center', margin: 10 }}>COVID - 19</Text>
+      <Container style={{ flex: 1, flexDirection: 'column', backgroundColor: '#4a545e' }}>
+        <StatusBar barStyle="" hidden={false} backgroundColor={'black'} />
+        <Text style={{ color: '#fa4700', fontSize: 20, fontWeight: 'bold', textAlign: 'center', margin: 10 }}>COVID - 19</Text>
 
         <View style={styles.searchBox}>
           <TextInput style={styles.inputs}
@@ -145,7 +145,7 @@ export default class Example extends Component {
 
         <ActivityIndicator
           size={"large"}
-          color={"red"}
+          color={"#fa4700"}
           animating={this.state.isLoading}
         />
 
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     height: 150,
-    backgroundColor: 'red'
+    backgroundColor: '#fa4700'
   },
   itemName: {
     fontSize: 16,
