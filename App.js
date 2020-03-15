@@ -21,7 +21,6 @@ export default class Example extends Component {
   }
 
   componentDidMount() {
-    this.findFlag();
     this.getCountryData();
   }
 
@@ -117,6 +116,12 @@ export default class Example extends Component {
     }
   }
 
+  titleStyleCondition(country) {
+    return country === 'Bosnia and Herzegovina' || 
+    country === 'Antigua and Barbuda' || 
+    country === 'St. Vincent Grenadines' ? styles.itemTitle2 : styles.itemTitle
+  }
+
   render() {
     const { countryName } = this.state;
     const countryX = this.findCountry(countryName);
@@ -156,7 +161,8 @@ export default class Example extends Component {
                   size={48}
                 />
 
-                <Text style={styles.itemTitle}>{item.country}</Text></View>
+                <Text style={this.titleStyleCondition(item.country)}>{item.country}</Text>
+              </View>
 
               <Text style={styles.itemName2}>Cases : {item.cases}</Text>
 
@@ -230,6 +236,14 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
   },
+
+  itemTitle2: {
+    marginLeft: 5,
+    fontSize: 24,
+    color: 'black',
+    fontWeight: 'bold',
+  },
+
   itemCode: {
     fontWeight: '600',
     fontSize: 12,
