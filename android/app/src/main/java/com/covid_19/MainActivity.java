@@ -1,4 +1,4 @@
-package com.covid_19;
+package com.covid_19x;
 
 import com.facebook.react.ReactActivity;
 

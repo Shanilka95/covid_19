@@ -1,4 +1,4 @@
-package com.covid_19;
+package com.covid_19x;
 
 import android.app.Application;
 import android.content.Context;
