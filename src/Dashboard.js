@@ -1,52 +1,65 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, ActivityIndicator, AsyncStorage, TouchableOpacity, StatusBar } from 'react-native';
-
+import { View, Text, TextInput, ActivityIndicator, AsyncStorage, TouchableOpacity, StatusBar } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
-import { Container, Icon, Badge } from 'native-base';
+import { Container, Icon, Fab, Button, Card, CardItem, Body } from 'native-base';
+import AnimateNumber from 'react-native-animate-number'
 import Flag from 'react-native-flags';
-import { flagList } from './FlagList';
+import { flagList } from './assets/FlagList';
+import AppStyles from './css/AppStyles';
+import Colors from './css/Colors';
+
+var cases, deaths, recovered = 0;
 
 export default class Example extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       coronaData: [],
       localData: [],
       countryName: '',
-      isLoading: true
+      isLoading: true,
+      active: false,
 
+      globeData: null,
+      localGlobeData: null,
     };
   }
 
   componentDidMount() {
-    this.getCountryData();
+    this.retrieveData();
+    this.getGlobeData();
   }
 
-  // async getallData() {
-  //   try {
-  //     try {
-  //       const response = await fetch('https://corona.lmao.ninja/all', {
-  //         method: 'GET',
-  //         headers: {
-  //           Accept: 'application/json',
-  //           'Content-Type': 'application/json',
-  //         }
-  //       });
-  //       const responseJson = await response.json();
-  //       this.setState({
-  //         coronaData: responseJson
-  //       });
-  //     }
-  //     catch (error) {
-  //       console.log(error);
-  //     }
+  async getGlobeData() {
+    try {
+      return fetch('https://corona.lmao.ninja/all', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }
+      })
 
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+        .then((response) => response.json())
+        .then((responseJson) => {
+          if (responseJson != null) {
+            this.setState({
+              globeData: responseJson,
+            })
+          }
+
+          this.getCountryData();
+
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async getCountryData() {
     try {
@@ -79,24 +92,24 @@ export default class Example extends Component {
     }
   }
 
-  async getFilteredData() {
-    if (!this.state.countryName == "") {
-      this.setState({
-        localData: JSON.parse(await AsyncStorage.getItem('coronaData')).filter(x => x.country === this.state.countryName),
-      })
-    } else {
-      this.retrieveData();
-    }
-  }
-
   async storedata() {
+    await AsyncStorage.setItem('globeData', JSON.stringify(this.state.globeData));
     await AsyncStorage.setItem('coronaData', JSON.stringify(this.state.coronaData));
   }
 
   async retrieveData() {
     this.setState({
+      localGlobeData: JSON.parse(await AsyncStorage.getItem('globeData')),
+    })
+
+    cases = this.state.localGlobeData.cases;
+    deaths = this.state.localGlobeData.deaths;
+    recovered = this.state.localGlobeData.recovered;
+
+    this.setState({
       localData: JSON.parse(await AsyncStorage.getItem('coronaData'))
     })
+
   }
 
   findCountry(query) {
@@ -126,9 +139,7 @@ export default class Example extends Component {
       || country === 'Trinidad and Tobago'
       || country === 'Equatorial Guinea'
       || country === 'U.S. Virgin Islands'
-
-
-      ? styles.itemTitle2 : styles.itemTitle
+      ? AppStyles.smallText : AppStyles.largeText
   }
 
   render() {
@@ -137,24 +148,84 @@ export default class Example extends Component {
     const compare = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
 
     return (
-      <Container style={{ flex: 1, flexDirection: 'column', backgroundColor: '#3b4147', alignItems: 'center' }}>
-        <StatusBar barStyle="" hidden={false} backgroundColor={'black'} />
-        <Text style={{ color: '#fa4700', fontSize: 20, fontWeight: 'bold', textAlign: 'center', margin: 10 }}>COVID - 19</Text>
+      <Container style={AppStyles.container}>
+        <StatusBar barStyle="" hidden={false} backgroundColor={Colors.Black} />
+        <Text style={AppStyles.appTitle}>COVID - 19</Text>
 
-        <View style={styles.searchBox}>
-          <TextInput style={styles.inputs}
+        <View style={AppStyles.searchBox}>
+          <TextInput style={AppStyles.inputs}
             placeholder="Search Country..."
             placeholderTextColor={'gray'}
             keyboardType="default"
             underlineColorAndroid='transparent'
             onChangeText={text => this.setState({ countryName: text })}
           />
-          <Icon name='md-search' style={{ fontSize: 25, color: 'red', flex: 1 }} />
+          <Icon name='md-search' style={AppStyles.searchIcon} />
         </View>
+
+        <Card transparent style={{ width: 300 }}>
+          <CardItem style={{borderRadius:10}}>
+            <Body>
+            <Text style={{alignSelf:'center', fontSize:20, color:Colors.DarkGray, fontWeight:'bold'}}>Global Statistics</Text>
+              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                <View style={{ flexDirection: 'column', alignItems: 'center', margin: 5 }}>
+                  <View style={{ width: 80, height: 80, borderColor: Colors.Blue, borderRadius: 60, borderWidth:1, justifyContent: 'center', alignItems: 'center' }}>
+                    <AnimateNumber
+                      value={cases}
+                      interval={15}
+                      style={{fontSize:16, fontWeight:'bold', color:Colors.Blue}}
+                      formatter={(val) => {
+                        return parseInt(val)
+                      }}
+                    />
+
+                  </View>
+                  <Text style={{fontSize:16, color:Colors.Blue,fontWeight:'bold'}}>Cases</Text>
+                </View>
+
+                <View style={{ flexDirection: 'column', alignItems: 'center', margin: 5 }}>
+                  <View style={{ width: 80, height: 80, borderColor: Colors.Green, borderRadius: 60, borderWidth:1, justifyContent: 'center', alignItems: 'center' }}>
+                    <AnimateNumber
+                      value={recovered}
+                      interval={15}
+                      style={{fontSize:16, fontWeight:'bold', color:Colors.Green}}
+                      formatter={(val) => {
+                        return parseInt(val)
+                      }}
+                    />
+
+                  </View>
+                  <Text style={{fontSize:16, color:'green', fontWeight:'bold'}}>Recovered</Text>
+                </View>
+                
+
+                <View style={{ flexDirection: 'column', alignItems: 'center', margin: 5 }}>
+                  <View style={{ width: 80, height: 80, borderColor: Colors.BurningRed, borderRadius: 60, borderWidth:1, justifyContent: 'center', alignItems: 'center' }}>
+                    <AnimateNumber
+                      value={deaths}
+                      interval={15}
+                      style={{fontSize:16, fontWeight:'bold', color:Colors.BurningRed}}
+                      formatter={(val) => {
+                        return parseInt(val)
+                      }}
+                    />
+
+                  </View>
+                  <Text style={{fontSize:16, color:Colors.BurningRed, fontWeight:'bold'}}>Deaths</Text>
+                </View>
+
+                
+
+              </View>    
+            </Body>
+          </CardItem>
+        </Card>
+
+        
 
         <ActivityIndicator
           size={"large"}
-          color={"#fa4700"}
+          color={Colors.BurningRed}
           animating={this.state.isLoading}
         />
 
@@ -163,7 +234,7 @@ export default class Example extends Component {
           style={{ flex: 1, width: 320 }}
           items={countryX.length === 1 && compare(countryName, countryX[0].country) ? [] : countryX}
           renderItem={({ item, index }) => (
-            <TouchableOpacity style={styles.itemContainer}>
+            <TouchableOpacity style={AppStyles.itemContainer}>
 
               <View style={{ flexDirection: 'row' }}>
                 <Flag
@@ -174,104 +245,39 @@ export default class Example extends Component {
                 <Text style={this.titleStyleCondition(item.country)}>{item.country}</Text>
               </View>
 
-              <Text style={styles.itemName2}>Cases : {item.cases}</Text>
+              <Text style={AppStyles.cases}>Cases : {item.cases}</Text>
 
-              <Text style={styles.itemName2}>Today Cases : {item.todayCases}</Text>
 
-              <Text style={styles.itemRecovered}>Recovered : {item.recovered}</Text>
 
-              <Text style={styles.itemDeaths}>{item.deaths} Deaths</Text>
+              <Text style={AppStyles.cases}>Today Cases : {item.todayCases}</Text>
+
+              <Text style={AppStyles.recovered}>Recovered : {item.recovered}</Text>
+
+              <Text style={AppStyles.deaths}>{item.deaths} Deaths</Text>
 
             </TouchableOpacity>
           )}
         />
+
+        {/* <Fab
+          active={this.state.active}
+          direction="up"
+          containerStyle={{}}
+          style={{ backgroundColor: 'black' }}
+          position="bottomRight"
+          onPress={() => this.setState({ active: !this.state.active })}>
+          <Icon name="share" />
+          <Button style={{ backgroundColor: '#34A34F' }}>
+            <Icon name="logo-whatsapp" />
+          </Button>
+          <Button style={{ backgroundColor: '#3B5998' }}>
+            <Icon name="logo-facebook" />
+          </Button>
+          <Button disabled style={{ backgroundColor: '#DD5144' }}>
+            <Icon name="mail" />
+          </Button>
+        </Fab> */}
       </Container>
     );
   }
 }
-
-const styles = StyleSheet.create({
-
-  searchBox: {
-    borderColor: 'gray',
-    backgroundColor: 'white',
-    borderRadius: 30,
-    borderWidth: 0.5,
-    width: 300,
-    height: 45,
-    margin: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-
-  },
-  inputs: {
-    height: 45,
-    flex: 6,
-    marginLeft: 20
-  },
-  itemContainer: {
-    justifyContent: 'flex-end',
-    borderRadius: 5,
-    padding: 10,
-    height: 150,
-    backgroundColor: '#fa4700'
-  },
-  itemName: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: '600',
-    fontWeight: 'bold'
-  },
-
-  itemRecovered: {
-    fontSize: 20,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-
-  itemDeaths: {
-    fontSize: 18,
-    color: 'black',
-    fontWeight: 'bold',
-  },
-
-  itemName2: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: '600',
-  },
-  itemTitle: {
-    marginLeft: 5,
-    fontSize: 30,
-    color: 'black',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    textAlignVertical: 'center'
-  },
-
-  itemTitle2: {
-    marginLeft: 5,
-    fontSize: 20,
-    color: 'black',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    textAlignVertical: 'center'
-  },
-
-  itemCode: {
-    fontWeight: '600',
-    fontSize: 12,
-    color: '#fff',
-  },
-  autocompleteContainer: {
-    backgroundColor: '#ffffff',
-    borderWidth: 0,
-  },
-  itemText: {
-    fontSize: 15,
-    paddingTop: 5,
-    paddingBottom: 5,
-    margin: 2,
-  },
-});

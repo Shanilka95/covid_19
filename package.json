@@ -16,6 +16,7 @@
     "native-base": "^2.13.8",
     "react": "16.9.0",
     "react-native": "0.61.5",
+    "react-native-animate-number": "^0.1.2",
     "react-native-autocomplete-input": "^4.1.0",
     "react-native-flags": "^1.0.0",
     "react-native-gesture-handler": "^1.6.0",
