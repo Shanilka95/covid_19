@@ -7,18 +7,17 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: Colors.DarkGray
+    backgroundColor: Colors.White
   },
 
   appTitle: {
     color: Colors.BurningRed,
-    fontSize: 30,
+    fontSize: 36,
     fontWeight: 'bold',
     textAlign: 'center',
-    margin: 5,
-    textShadowColor:Colors.Black,
-    textShadowOffset:{width:1, height:4},
-    textShadowRadius:1,
+    textShadowColor: Colors.Gray,
+    textShadowOffset: { width: 1, height: 3 },
+    textShadowRadius: 8,
   },
 
   searchIcon: {
@@ -28,16 +27,15 @@ export default StyleSheet.create({
   },
 
   searchBox: {
-    borderColor: Colors.Black,
+    margin:8,
     backgroundColor: Colors.White,
     borderRadius: 40,
-    borderWidth: 0.5,
     width: 300,
     height: 45,
-    marginBottom:10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    elevation:10
   },
 
   inputs: {
@@ -47,13 +45,13 @@ export default StyleSheet.create({
   },
 
   itemContainer: {
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
+    alignItems:'center',
     borderRadius: 8,
-    borderColor: Colors.White,
-    borderWidth: 0.5,
     padding: 10,
-    height: 150,
-    backgroundColor: Colors.BurningRed,
+    height: 200,
+    backgroundColor: Colors.DarkGray,
+    elevation: 8
   },
 
   itemName: {
@@ -61,49 +59,87 @@ export default StyleSheet.create({
     color: Colors.White,
     fontWeight: '600',
     fontWeight: 'bold',
-    
+
+  },
+
+  cases: {
+    fontSize: 20,
+    color: Colors.Blue,
+    fontWeight: 'bold',
+    textShadowColor: Colors.Black,
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 5,
+  },
+
+  casesT: {
+    fontSize: 12,
+    color: Colors.Blue,
+    fontWeight: 'normal',
+    textShadowColor: Colors.Black,
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 5,
   },
 
   recovered: {
     fontSize: 20,
-    color: Colors.White,
+    color: Colors.Green,
     fontWeight: 'bold',
+    textShadowColor: Colors.Black,
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 5,
   },
+
+  recoveredT: {
+    fontSize: 12,
+    color: Colors.Green,
+    fontWeight: 'normal',
+    textShadowColor: Colors.Black,
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 5,
+  },
+
 
   deaths: {
-    fontSize: 18,
-    color: Colors.Black,
+    fontSize: 20,
+    color: Colors.Red,
     fontWeight: 'bold',
+    textShadowColor: Colors.Black,
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 5,
+
+  },
+  deathsT: {
+    fontSize: 12,
+    color: Colors.Red,
+    fontWeight: 'normal',
+    textShadowColor: Colors.Black,
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 5,
+
   },
 
-  cases: {
-    fontSize: 16,
-    color: Colors.White,
-    fontWeight: '600',
-  },
+  
 
   largeText: {
-    marginLeft: 5,
-    fontSize: 30,
-    color: Colors.DarkGray,
+    fontSize: 28,
+    color: Colors.White,
     fontWeight: 'bold',
     textAlign: 'center',
     textAlignVertical: 'center',
-    textShadowColor:Colors.White,
-    textShadowOffset:{width:1, height:0.5},
-    textShadowRadius:1,
+    textShadowColor: Colors.Black,
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 5,
   },
 
   smallText: {
-    marginLeft: 5,
-    fontSize: 20,
-    color: Colors.DarkGray,
+    fontSize: 18,
+    color: Colors.White,
     fontWeight: 'bold',
     textAlign: 'center',
     textAlignVertical: 'center',
-    textShadowColor:Colors.White,
-    textShadowOffset:{width:1, height:0.5},
-    textShadowRadius:1,
+    textShadowColor: Colors.Black,
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 5,
   },
 
 });

@@ -1,12 +1,14 @@
 export default {
 
-    Gray: '#818185',
+    Gray: '#616161',
     DarkGray:'#31363B',
     BurningRed: '#fA4700',
     White: '#FFFFFF',
     Black: '#000000',
     Pink:'#ffabab',
-    Green:'#00b834',
-    Blue:'#0025ba'
+    Green:'#ffd04f',
+    Blue:'#4fffff',
+    Red:'#ff4f4f',
+    DarkBrown:'#1f0800'
 
 };

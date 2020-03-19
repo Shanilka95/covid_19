@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, ActivityIndicator, AsyncStorage, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, AsyncStorage, TouchableOpacity, StatusBar, Image,Linking } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
-import { Container, Icon, Fab, Button, Card, CardItem, Body } from 'native-base';
+import { Container, Icon, Fab, Button, Card, CardItem, Body, Badge } from 'native-base';
 import AnimateNumber from 'react-native-animate-number'
 import Flag from 'react-native-flags';
 import { flagList } from './assets/FlagList';
 import AppStyles from './css/AppStyles';
 import Colors from './css/Colors';
+import Modal from "react-native-modal";
+import { } from 'react-native-gesture-handler';
 
 var cases, deaths, recovered = 0;
 
@@ -20,9 +22,11 @@ export default class Example extends Component {
       countryName: '',
       isLoading: true,
       active: false,
+      click: false,
 
       globeData: null,
       localGlobeData: null,
+      visible: false
     };
   }
 
@@ -32,6 +36,7 @@ export default class Example extends Component {
   }
 
   async getGlobeData() {
+
     try {
       return fetch('https://corona.lmao.ninja/all', {
         method: 'GET',
@@ -142,6 +147,154 @@ export default class Example extends Component {
       ? AppStyles.smallText : AppStyles.largeText
   }
 
+  renderSearchBox() {
+    return (
+      <View style={AppStyles.searchBox}>
+        <TextInput style={AppStyles.inputs}
+          placeholder="Search Country..."
+          placeholderTextColor={Colors.DarkGray}
+          keyboardType="default"
+          underlineColorAndroid='transparent'
+          onChangeText={text => this.setState({ countryName: text })}
+        />
+        <Icon name='md-search' style={AppStyles.searchIcon} />
+      </View>
+    );
+  }
+
+  renderGlobalBox() {
+    return (
+      <Card transparent style={{ width: 320 }}>
+        <CardItem style={{ borderRadius: 10, backgroundColor: Colors.DarkGray, borderColor: Colors.Black, borderWidth: 0.5, elevation: 10 }}>
+          <Body>
+            <Text style={{
+              alignSelf: 'center',
+              fontSize: 22,
+              color: 'white',
+              fontWeight: 'bold',
+              textShadowColor: Colors.Black,
+              textShadowOffset: { width: 1, height: 1 },
+              textShadowRadius: 1,
+            }}>Global Statistics</Text>
+            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+              <View style={{ flexDirection: 'column', alignItems: 'center', margin: 5 }}>
+                <View style={{
+                  width: 90,
+                  height: 90,
+                  borderColor: Colors.Blue,
+                  borderRadius: 60,
+                  borderWidth: 3,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+
+                }}>
+                  <Image
+                    source={require("./images/case.png")}
+                    style={{ width: 30, height: 30 }}
+                  />
+                  <AnimateNumber
+                    value={cases}
+                    interval={15}
+                    style={{
+                      fontSize: 16, fontWeight: 'bold', color: Colors.Blue,
+                      textShadowColor: Colors.Black,
+                      textShadowOffset: { width: 1, height: 1 },
+                      textShadowRadius: 1,
+                    }}
+                    formatter={(val) => {
+                      return parseInt(val)
+                    }}
+                  />
+
+                  <Text style={AppStyles.casesT}> Cases </Text>
+
+                </View>
+              </View>
+
+              <View style={{ flexDirection: 'column', alignItems: 'center', margin: 5 }}>
+                <View style={{ width: 90, height: 90, borderColor: Colors.Green, borderRadius: 60, borderWidth: 3, justifyContent: 'center', alignItems: 'center' }}>
+                  <Image
+                    source={require("./images/recover.png")}
+                    style={{ width: 30, height: 30 }}
+                  />
+
+                  <AnimateNumber
+                    value={recovered}
+                    interval={15}
+                    style={{
+                      fontSize: 16, fontWeight: 'bold', color: Colors.Green, textShadowColor: Colors.Black,
+                      textShadowOffset: { width: 1, height: 1 },
+                      textShadowRadius: 1
+                    }}
+                    formatter={(val) => {
+                      return parseInt(val)
+                    }}
+                  />
+
+                  <Text style={AppStyles.recoveredT}> Cured </Text>
+
+                </View>
+              </View>
+
+
+              <View style={{ flexDirection: 'column', alignItems: 'center', margin: 5 }}>
+                <View style={{ width: 90, height: 90, borderColor: Colors.Red, borderRadius: 60, borderWidth: 3, justifyContent: 'center', alignItems: 'center' }}>
+
+                  <Image
+                    source={require("./images/boot.png")}
+                    style={{ width: 30, height: 30 }}
+                  />
+
+                  <AnimateNumber
+                    value={deaths}
+                    interval={15}
+                    style={{
+                      fontSize: 16, fontWeight: 'bold', color: Colors.Red,
+                      textShadowColor: Colors.Black,
+                      textShadowOffset: { width: 1, height: 1 },
+                      textShadowRadius: 1,
+                    }}
+                    formatter={(val) => {
+                      return parseInt(val)
+                    }}
+                  />
+                  <Text style={AppStyles.deathsT}> Deaths </Text>
+
+
+                </View>
+
+              </View>
+
+            </View>
+          </Body>
+        </CardItem>
+      </Card>
+    );
+  }
+
+  renderLoading() {
+    return (
+      <ActivityIndicator
+        size={"large"}
+        color={Colors.BurningRed}
+        animating={this.state.isLoading}
+      />
+    );
+  }
+
+  // returnCount(type, count) {
+  //   if (type === "Cases") {
+  //     return count === 1 ? count + " Case      " : count + " Cases      "
+  //   } else {
+  //     return count === 1 ? count + " Death " : count + " Deaths "
+  //   }
+  // }
+  visibleDialog() {
+    this.setState({
+      visible: !this.state.visible
+    })
+  }
+
   render() {
     const { countryName } = this.state;
     const countryX = this.findCountry(countryName);
@@ -150,133 +303,159 @@ export default class Example extends Component {
     return (
       <Container style={AppStyles.container}>
         <StatusBar barStyle="" hidden={false} backgroundColor={Colors.Black} />
-        <Text style={AppStyles.appTitle}>COVID - 19</Text>
 
-        <View style={AppStyles.searchBox}>
-          <TextInput style={AppStyles.inputs}
-            placeholder="Search Country..."
-            placeholderTextColor={'gray'}
-            keyboardType="default"
-            underlineColorAndroid='transparent'
-            onChangeText={text => this.setState({ countryName: text })}
-          />
-          <Icon name='md-search' style={AppStyles.searchIcon} />
-        </View>
+        {this.renderLoading()}
 
-        <Card transparent style={{ width: 300 }}>
-          <CardItem style={{borderRadius:10}}>
-            <Body>
-            <Text style={{alignSelf:'center', fontSize:20, color:Colors.DarkGray, fontWeight:'bold'}}>Global Statistics</Text>
-              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                <View style={{ flexDirection: 'column', alignItems: 'center', margin: 5 }}>
-                  <View style={{ width: 80, height: 80, borderColor: Colors.Blue, borderRadius: 60, borderWidth:1, justifyContent: 'center', alignItems: 'center' }}>
-                    <AnimateNumber
-                      value={cases}
-                      interval={15}
-                      style={{fontSize:16, fontWeight:'bold', color:Colors.Blue}}
-                      formatter={(val) => {
-                        return parseInt(val)
-                      }}
-                    />
+        <Text style={AppStyles.appTitle}>  COVID-19  </Text>
 
-                  </View>
-                  <Text style={{fontSize:16, color:Colors.Blue,fontWeight:'bold'}}>Cases</Text>
-                </View>
+        {this.renderGlobalBox()}
 
-                <View style={{ flexDirection: 'column', alignItems: 'center', margin: 5 }}>
-                  <View style={{ width: 80, height: 80, borderColor: Colors.Green, borderRadius: 60, borderWidth:1, justifyContent: 'center', alignItems: 'center' }}>
-                    <AnimateNumber
-                      value={recovered}
-                      interval={15}
-                      style={{fontSize:16, fontWeight:'bold', color:Colors.Green}}
-                      formatter={(val) => {
-                        return parseInt(val)
-                      }}
-                    />
-
-                  </View>
-                  <Text style={{fontSize:16, color:'green', fontWeight:'bold'}}>Recovered</Text>
-                </View>
-                
-
-                <View style={{ flexDirection: 'column', alignItems: 'center', margin: 5 }}>
-                  <View style={{ width: 80, height: 80, borderColor: Colors.BurningRed, borderRadius: 60, borderWidth:1, justifyContent: 'center', alignItems: 'center' }}>
-                    <AnimateNumber
-                      value={deaths}
-                      interval={15}
-                      style={{fontSize:16, fontWeight:'bold', color:Colors.BurningRed}}
-                      formatter={(val) => {
-                        return parseInt(val)
-                      }}
-                    />
-
-                  </View>
-                  <Text style={{fontSize:16, color:Colors.BurningRed, fontWeight:'bold'}}>Deaths</Text>
-                </View>
-
-                
-
-              </View>    
-            </Body>
-          </CardItem>
-        </Card>
-
-        
-
-        <ActivityIndicator
-          size={"large"}
-          color={Colors.BurningRed}
-          animating={this.state.isLoading}
-        />
+        {this.renderSearchBox()}
 
         <FlatGrid
-          itemDimension={250}
-          style={{ flex: 1, width: 320 }}
+          itemDimension={300}
+          staticDimension={320}
           items={countryX.length === 1 && compare(countryName, countryX[0].country) ? [] : countryX}
           renderItem={({ item, index }) => (
-            <TouchableOpacity style={AppStyles.itemContainer}>
+            <Card style={AppStyles.itemContainer}>
 
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ justifyContent: 'flex-start', flexDirection: 'row' }}>
                 <Flag
+                  style={{}}
                   code={this.findFlag(item.country)}
                   size={48}
                 />
+                <Text style={this.titleStyleCondition(item.country)}> {item.country} </Text>
 
-                <Text style={this.titleStyleCondition(item.country)}>{item.country}</Text>
               </View>
 
-              <Text style={AppStyles.cases}>Cases : {item.cases}</Text>
+              <View style={{ width: 1, height: 10 }}></View>
 
 
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
 
-              <Text style={AppStyles.cases}>Today Cases : {item.todayCases}</Text>
+                <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', margin: 1 }}>
+                  <Image
+                    source={require("./images/case.png")}
+                    style={{ width: 25, height: 25 }}
+                  />
+                  <Text style={AppStyles.cases}> {item.cases} </Text>
+                </View>
 
-              <Text style={AppStyles.recovered}>Recovered : {item.recovered}</Text>
+                <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', margin: 1, marginLeft: 30, marginRight: 30 }}>
+                  <Image
+                    source={require("./images/recover.png")}
+                    style={{ width: 25, height: 25 }}
+                  />
+                  <Text style={AppStyles.recovered}> {item.recovered} </Text>
+                </View>
 
-              <Text style={AppStyles.deaths}>{item.deaths} Deaths</Text>
+                <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', margin: 1 }}>
+                  <Image
+                    source={require("./images/boot.png")}
+                    style={{ width: 25, height: 25 }}
+                  />
+                  <Text style={AppStyles.deaths}> {item.deaths} </Text>
+                </View>
 
-            </TouchableOpacity>
+              </View>
+
+              <View style={{ flexDirection: 'row', alignContent: 'center', margin: 20 }}>
+                <Text style={{
+                  fontSize: 16,
+                  color: Colors.White,
+                  fontWeight: 'bold',
+                  textShadowColor: Colors.Black,
+                  textShadowOffset: { width: 1, height: 2 },
+                  textShadowRadius: 1,
+                }}>Today  » </Text>
+
+                <Text style={{
+                  fontSize: 16,
+                  color: Colors.White,
+                  fontWeight: 'bold',
+                  textShadowColor: Colors.Black,
+                  textShadowOffset: { width: 1, height: 2 },
+                  textShadowRadius: 5,
+                }}> {item.todayCases} Cases </Text>
+
+                {/* <Image
+                  source={require("./images/today_cases.png")}
+                  style={{ width: 25, height: 25 }}
+                /> */}
+
+                <Text style={{
+                  fontSize: 16,
+                  color: Colors.White,
+                  fontWeight: 'bold',
+                  textShadowColor: Colors.Black,
+                  textShadowOffset: { width: 1, height: 2 },
+                  textShadowRadius: 5,
+                }}>  •   {item.todayDeaths} Deaths </Text>
+
+                {/* <Image
+                  source={require("./images/today_boot.png")}
+                  style={{ width: 25, height: 25 }}
+                /> */}
+
+              </View>
+            </Card>
           )}
         />
 
-        {/* <Fab
+        <Modal
+          style={{ justifyContent: 'center', alignItems: 'center' }}
+          isVisible={this.state.visible}
+          animationIn={'slideInDown'}
+          animationOut={'slideOutDown'}
+          animationInTiming={500}
+          animationOutTiming={500}
+        >
+          <View
+            style={{ width: 300, height: 400, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.White, borderRadius: 10 }}>
+
+            <Image
+              source={require("./images/cvd.jpg")}
+              style={{ width: 280, height: 200, borderRadius: 15, }}
+              resizeMode={'center'}
+            />
+
+            <Text style={{ color: Colors.Black , fontWeight:'bold'}}> Development </Text>
+            <Text style={{ color: Colors.Black }}> Shanilka Liyanage </Text>
+
+            <Icon name="md-puse" style={{fontSize:20}} onPress={ ()=> Linking.openURL('https://www.linkedin.com/in/shanilka-liyanage9/') } />
+            
+            <Text style={{ color: Colors.Black }} onPress={ ()=> Linking.openURL('https://www.facebook.com/shanilka95') }> Fb </Text>
+
+            <Text style={{ color: Colors.Black, fontWeight:'bold' }}> Idea and Support </Text>
+            <Text style={{ color: Colors.Black }}> Danidu Chamikara </Text>
+            <Text style={{ color: Colors.Black }} onPress={ ()=> Linking.openURL('https://www.linkedin.com/in/danidu-chamikara-02a17811a/') }> LinkedIn </Text>
+            <Text style={{ color: Colors.Black }} onPress={ ()=> Linking.openURL('https://www.facebook.com/danidu.chamikara') }> fb </Text>
+
+            <Text style={{ color: Colors.Black, fontWeight:'bold' }}> Udith Perera </Text>
+            <Text style={{ color: Colors.Black }} onPress={ ()=> Linking.openURL('https://www.linkedin.com/in/udithonline/') }> LinkedIn </Text>
+            <Text style={{ color: Colors.Black }} onPress={ ()=> Linking.openURL('https://www.facebook.com/udithonline') }> fb </Text>
+            
+            
+            
+
+            <Button style={{ width: 80, height: 40, borderRadius: 5, padding: 5, justifyContent: 'center', alignItems: 'center', elevation: 8, backgroundColor: Colors.DarkGray }} onPress={() => this.visibleDialog()}>
+              <Text style={{ color: Colors.White }}> OK! </Text>
+            </Button>
+          </View>
+        </Modal>
+
+
+
+        <Fab
           active={this.state.active}
-          direction="up"
+          direction="down"
           containerStyle={{}}
-          style={{ backgroundColor: 'black' }}
-          position="bottomRight"
-          onPress={() => this.setState({ active: !this.state.active })}>
-          <Icon name="share" />
-          <Button style={{ backgroundColor: '#34A34F' }}>
-            <Icon name="logo-whatsapp" />
-          </Button>
-          <Button style={{ backgroundColor: '#3B5998' }}>
-            <Icon name="logo-facebook" />
-          </Button>
-          <Button disabled style={{ backgroundColor: '#DD5144' }}>
-            <Icon name="mail" />
-          </Button>
-        </Fab> */}
+          style={{ backgroundColor: 'black', width: 50, height: 50, elevation: 10 }}
+          position="topRight"
+          onPress={() => this.visibleDialog()}>
+          <Icon name="md-pulse" />
+        </Fab>
       </Container>
     );
   }
