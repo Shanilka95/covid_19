@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, ActivityIndicator, AsyncStorage, TouchableOpacity, StatusBar, Image,Linking } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, AsyncStorage, TouchableOpacity, StatusBar, Image, Linking } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
 import { Container, Icon, Fab, Button, Card, CardItem, Body, Badge } from 'native-base';
 import AnimateNumber from 'react-native-animate-number'
@@ -164,9 +164,9 @@ export default class Example extends Component {
 
   renderGlobalBox() {
     return (
-      <Card transparent style={{ width: 320 }}>
-        <CardItem style={{ borderRadius: 10, backgroundColor: Colors.DarkGray, borderColor: Colors.Black, borderWidth: 0.5, elevation: 10 }}>
-          <Body>
+      <Card transparent style={{ width: 320, }}>
+        <CardItem style={{ borderRadius: 10, backgroundColor: Colors.DarkGray, borderColor: Colors.Black, borderWidth: 0.5, elevation: 10, height:180,  }}>
+          <Body style={{justifyContent:'center', alignItems:'center'}}>
             <Text style={{
               alignSelf: 'center',
               fontSize: 22,
@@ -186,7 +186,6 @@ export default class Example extends Component {
                   borderWidth: 3,
                   justifyContent: 'center',
                   alignItems: 'center',
-
                 }}>
                   <Image
                     source={require("./images/case.png")}
@@ -416,31 +415,35 @@ export default class Example extends Component {
 
             <Image
               source={require("./images/cvd.jpg")}
-              style={{ width: 280, height: 200, borderRadius: 15, }}
+              style={{ width: 280, height: 150, borderRadius: 10, }}
               resizeMode={'center'}
             />
 
-            <Text style={{ color: Colors.Black , fontWeight:'bold'}}> Development </Text>
-            <Text style={{ color: Colors.Black }}> Shanilka Liyanage </Text>
+            <Text style={{ fontSize:14,color: Colors.BurningRed, fontWeight: 'bold', marginTop:20 }}> DEVELOPMENT </Text>
 
-            <Icon name="md-puse" style={{fontSize:20}} onPress={ ()=> Linking.openURL('https://www.linkedin.com/in/shanilka-liyanage9/') } />
-            
-            <Text style={{ color: Colors.Black }} onPress={ ()=> Linking.openURL('https://www.facebook.com/shanilka95') }> Fb </Text>
+            <View style={{ flexDirection: 'row', marginBottom:20 }}>
+              <Text style={{ color: Colors.Black, fontSize: 20, }}> Shanilka Liyanage </Text>
+              <Icon name="logo-linkedin" style={{ fontSize: 30, color: '#0e76a8', marginLeft: 5 }} onPress={() => Linking.openURL('https://www.linkedin.com/in/shanilka-liyanage9/')} />
+              <Icon name="logo-facebook" style={{ fontSize: 30, color: '#3b5998', marginLeft: 5 }} onPress={() => Linking.openURL('https://www.facebook.com/shanilka95')} />
+            </View>
 
-            <Text style={{ color: Colors.Black, fontWeight:'bold' }}> Idea and Support </Text>
-            <Text style={{ color: Colors.Black }}> Danidu Chamikara </Text>
-            <Text style={{ color: Colors.Black }} onPress={ ()=> Linking.openURL('https://www.linkedin.com/in/danidu-chamikara-02a17811a/') }> LinkedIn </Text>
-            <Text style={{ color: Colors.Black }} onPress={ ()=> Linking.openURL('https://www.facebook.com/danidu.chamikara') }> fb </Text>
 
-            <Text style={{ color: Colors.Black, fontWeight:'bold' }}> Udith Perera </Text>
-            <Text style={{ color: Colors.Black }} onPress={ ()=> Linking.openURL('https://www.linkedin.com/in/udithonline/') }> LinkedIn </Text>
-            <Text style={{ color: Colors.Black }} onPress={ ()=> Linking.openURL('https://www.facebook.com/udithonline') }> fb </Text>
-            
-            
-            
+            <Text style={{ fontSize: 14,color: Colors.BurningRed, fontWeight: 'bold' }}> IDEA & SUPPORT </Text>
+
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ color: Colors.Black,fontSize: 20 }}> Danidu Chamikara </Text>
+              <Icon name="logo-linkedin" style={{ fontSize: 30, color: '#0e76a8', marginLeft: 5 }} onPress={() => Linking.openURL('https://www.linkedin.com/in/danidu-chamikara-02a17811a/')} />
+              <Icon name="logo-facebook" style={{ fontSize: 30, color: '#3b5998', marginLeft: 5 }} onPress={() => Linking.openURL('https://www.facebook.com/danidu.chamikara')} />
+            </View>
+
+            <View style={{ flexDirection: 'row', marginBottom:20 }}>
+              <Text style={{ color: Colors.Black, fontSize: 20 }}> Udith Perera </Text>
+              <Icon name="logo-linkedin" style={{ fontSize: 30, color: '#0e76a8', marginLeft: 5 }} onPress={() => Linking.openURL('https://www.linkedin.com/in/udithonline/')} />
+              <Icon name="logo-facebook" style={{ fontSize: 30, color: '#3b5998', marginLeft: 5 }} onPress={() => Linking.openURL('https://www.facebook.com/udithonline')} />
+            </View>
 
             <Button style={{ width: 80, height: 40, borderRadius: 5, padding: 5, justifyContent: 'center', alignItems: 'center', elevation: 8, backgroundColor: Colors.DarkGray }} onPress={() => this.visibleDialog()}>
-              <Text style={{ color: Colors.White }}> OK! </Text>
+              <Text style={{ color: Colors.White }}> OK </Text>
             </Button>
           </View>
         </Modal>
